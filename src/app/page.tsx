@@ -26,6 +26,7 @@ export default function Home() {
   const [suggestions, setSuggestions] = useState<SuggestMoodContentOutput | null>(null);
   const [emotionHistory, setEmotionHistory] = useState<EmotionHistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("upload");
 
   useEffect(() => {
     try {
@@ -48,6 +49,8 @@ export default function Home() {
     setAnalysisResult(null);
     setSuggestions(null);
     setSelfieUri(photoDataUri);
+    // Switch back to the upload tab view after analysis
+    setActiveTab("upload")
 
     try {
       const result = await analyzeSelfieEmotion({ photoDataUri });
@@ -105,7 +108,7 @@ export default function Home() {
       <main className="flex-1 p-4 sm:p-6 md:p-8">
         <div className="max-w-7xl mx-auto grid gap-8 lg:grid-cols-5">
           <div className="lg:col-span-3 flex flex-col gap-8">
-            <SelfieUploader onAnalyze={handleAnalyze} isLoading={isLoading} />
+            <SelfieUploader onAnalyze={handleAnalyze} isLoading={isLoading} activeTab={activeTab} setActiveTab={setActiveTab} />
             {(isLoading || analysisResult) && (
               <MoodDisplay result={analysisResult} selfieUri={selfieUri} isLoading={isLoading} />
             )}
